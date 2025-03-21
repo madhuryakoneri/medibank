@@ -7,8 +7,8 @@ plugins {
     id "com.github.spotbugs" version "5.0.14"
     id "io.freefair.lombok" version "8.0.1"
     // TODO Enable checkstyle and PMD. Fix all the relevant issues.
-    //id "checkstyle"
-    //id "pmd"
+    id "checkstyle"
+    id "pmd"
 }
 
 group = 'com.audition'
@@ -18,7 +18,8 @@ targetCompatibility = '17'
 
 
 // TODO allow for code-analysis.gradle to be applied for code analysis.
-// apply from: 'config/code-analysis.gradle'
+ apply from: 'config/code-analysis.gradle'
+
 
 configurations {
     compileOnly {
@@ -53,6 +54,9 @@ dependencies {
     implementation "org.springframework.cloud:spring-cloud-starter-circuitbreaker-reactor-resilience4j"
     implementation "org.springframework.cloud:spring-cloud-starter-config"
     implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:${springdocVersion}"
+    implementation group: 'org.hibernate.validator', name: 'hibernate-validator', version: '8.0.1.Final'
+    implementation group: 'org.hibernate.validator', name: 'hibernate-validator-annotation-processor', version: '8.0.1.Final'
+
 
     developmentOnly "org.springframework.boot:spring-boot-devtools"
     runtimeOnly "io.micrometer:micrometer-registry-prometheus"

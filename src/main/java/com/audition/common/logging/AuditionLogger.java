@@ -1,12 +1,19 @@
 package com.audition.common.logging;
 
+import com.audition.common.exception.SystemException;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ProblemDetail;
 import org.springframework.stereotype.Component;
 
 @Component
 public class AuditionLogger {
+
+    @Autowired
+    private transient ObjectMapper objectMapper;
 
     public void info(final Logger logger, final String message) {
         if (logger.isInfoEnabled()) {
@@ -59,11 +66,18 @@ public class AuditionLogger {
 
     private String createStandardProblemDetailMessage(final ProblemDetail standardProblemDetail) {
         // TODO Add implementation here.
-        return StringUtils.EMPTY;
+        try {
+            return objectMapper.writeValueAsString(standardProblemDetail);
+        } catch (JsonProcessingException e) {
+            throw new SystemException("Error processing problem detail: " + e.getMessage(), e);
+        }
     }
 
     private String createBasicErrorResponseMessage(final Integer errorCode, final String message) {
         // TODO Add implementation here.
-        return StringUtils.EMPTY;
+        if (errorCode == null || StringUtils.isBlank(message)) {
+            return "Error details are incomplete.";
+        }
+        return String.format("Error Code: %d - Message: %s", errorCode, message);
     }
 }
